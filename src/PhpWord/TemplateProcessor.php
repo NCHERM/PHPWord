@@ -917,7 +917,6 @@ class TemplateProcessor
         }
 
         if ($replace) {
-			var_dump($matches);
             $this->tempDocumentMainPart = str_replace(
                 $matches[1] . $matches[2] . $matches[3],
                 implode('', $cloned),
