@@ -88,6 +88,8 @@ class TemplateProcessor
      */
     protected $tempDocumentContentTypes = '';
 
+	protected $tempDocumentFootNotes = '';
+
     /**
      * new inserted images list.
      *
@@ -134,6 +136,7 @@ class TemplateProcessor
         $this->tempDocumentMainPart = $this->readPartWithRels($this->getMainPartName());
         $this->tempDocumentSettingsPart = $this->readPartWithRels($this->getSettingsPartName());
         $this->tempDocumentContentTypes = $this->zipClass->getFromName($this->getDocumentContentTypesName());
+	    $this->tempDocumentFootNotes    = $this->zipClass->getFromName($this->getDocumentContentFootNotes());
     }
 
     public function __destruct()
@@ -357,6 +360,7 @@ class TemplateProcessor
         $this->tempDocumentHeaders = $this->setValueForPart($search, $replace, $this->tempDocumentHeaders, $limit);
         $this->tempDocumentMainPart = $this->setValueForPart($search, $replace, $this->tempDocumentMainPart, $limit);
         $this->tempDocumentFooters = $this->setValueForPart($search, $replace, $this->tempDocumentFooters, $limit);
+	    $this->tempDocumentFootNotes = $this->setValueForPart($search, $replace, $this->tempDocumentFootNotes, $limit);
     }
 
     /**
@@ -993,6 +997,7 @@ class TemplateProcessor
 
         $this->savePartWithRels($this->getMainPartName(), $this->tempDocumentMainPart);
         $this->savePartWithRels($this->getSettingsPartName(), $this->tempDocumentSettingsPart);
+	    $this->saveFootNote($this->getDocumentContentFootNotes(), $this->tempDocumentFootNotes);
 
         foreach ($this->tempDocumentFooters as $index => $xml) {
             $this->savePartWithRels($this->getFooterName($index), $xml);
@@ -1007,6 +1012,15 @@ class TemplateProcessor
 
         return $this->tempDocumentFilename;
     }
+
+	protected function saveFootNote($fileName, $xml)
+	{
+		$this->zipClass->addFromString($fileName, $xml);
+		if (isset($this->tempDocumentRelations[$fileName])) {
+			$relsFileName = $this->getRelationsName($fileName);
+			$this->zipClass->addFromString($relsFileName, $this->tempDocumentRelations[$fileName]);
+		}
+	}
 
     /**
      * @param string $fileName
@@ -1193,6 +1207,13 @@ class TemplateProcessor
         return '[Content_Types].xml';
     }
 
+	/**
+	 * @return string
+	 */
+	protected function getDocumentContentFootNotes()
+	{
+		return 'word/footnotes.xml';
+	}
     /**
      * Find the start position of the nearest table before $offset.
      */
