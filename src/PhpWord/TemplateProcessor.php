@@ -359,6 +359,7 @@ class TemplateProcessor
 
         $this->tempDocumentHeaders = $this->setValueForPart($search, $replace, $this->tempDocumentHeaders, $limit);
         $this->tempDocumentMainPart = $this->setValueForPart($search, $replace, $this->tempDocumentMainPart, $limit);
+		$this->tempDocumentRelations = $this->setValueForPart($search, $replace, $this->tempDocumentRelations, $limit);
         $this->tempDocumentFooters = $this->setValueForPart($search, $replace, $this->tempDocumentFooters, $limit);
 	    $this->tempDocumentFootNotes = $this->setValueForPart($search, $replace, $this->tempDocumentFootNotes, $limit);
     }
